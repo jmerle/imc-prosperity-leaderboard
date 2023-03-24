@@ -121,7 +121,7 @@ for (const team of Object.values(teamData)) {
     const previousResult = team.results[i - 1];
 
     row[`round-${i}-rank`] = result ? result.rank : null;
-    row[`round-${i}-rank-delta`] = deltaValue(result?.rank, previousResult?.rank);
+    row[`round-${i}-rank-delta`] = deltaValue(previousResult?.rank, result?.rank);
     row[`round-${i}-team`] = team.team;
     row[`round-${i}-profit`] = result ? result.profit : null;
     row[`round-${i}-profit-delta`] = deltaValue(result?.profit, previousResult?.profit);
