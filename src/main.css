@@ -1,11 +1,28 @@
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-flow: column;
+  height: 100vh;
+}
+
+#search {
+  width: 100%;
+  font-size: 16px;
+  padding: 10px 18px;
+  border: 0;
+  color: #181d1f;
+  background: #f8f8f8;
 }
 
 #grid {
-  width: 100vw;
-  height: 100vh;
+  flex: 1;
 }
 
 .header-with-tooltip .ag-header-cell-text {

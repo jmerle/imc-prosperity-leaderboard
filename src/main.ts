@@ -5,6 +5,8 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 import _teamData from '../data/processed.json';
 import { ProcessedTeam } from './models';
 
+const teamData = _teamData as Record<string, ProcessedTeam>;
+
 function deltaValue(current: number | null | undefined, previous: number | null | undefined): number | null {
   const hasCurrent = current !== null && current !== undefined;
   const hasPrevious = previous !== null && previous !== undefined;
@@ -58,28 +60,27 @@ function createDeltaFormatter(decimals: number): agGrid.ValueFormatterFunc {
   };
 }
 
-const teamData = _teamData as Record<string, ProcessedTeam>;
-
 const columns: agGrid.GridOptions['columnDefs'] = [];
 
 const minRound = Math.min(...Object.values(teamData).map(team => Math.min(...Object.keys(team.results).map(Number))));
 const maxRound = Math.max(...Object.values(teamData).map(team => Math.max(...Object.keys(team.results).map(Number))));
+
+const officialJointInfo =
+  'Ranks are shown in official and joint format. The official rank does not have joint places for teams with equal profits, the joint rank does.';
+
+const numberComparator: agGrid.ColDef['comparator'] = (valueA, valueB) => {
+  if (valueA === valueB) {
+    return 0;
+  } else if (valueA === null) {
+    return 1;
+  } else if (valueB === null) {
+    return -1;
+  } else {
+    return valueA - valueB;
+  }
+};
+
 for (let i = maxRound; i >= minRound; i--) {
-  const numberComparator: agGrid.ColDef['comparator'] = (valueA, valueB) => {
-    if (valueA === valueB) {
-      return 0;
-    } else if (valueA === null) {
-      return 1;
-    } else if (valueB === null) {
-      return -1;
-    } else {
-      return valueA - valueB;
-    }
-  };
-
-  const officialJointInfo =
-    'Ranks are shown in official and joint format. The official rank does not have joint places for teams with equal profits, the joint rank does.';
-
   columns.push({
     headerName: `After Round ${i}`,
     children: [
@@ -161,12 +162,30 @@ for (const team of Object.values(teamData)) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const gridDiv = document.querySelector<HTMLDivElement>('#grid')!;
-  new agGrid.Grid(gridDiv, {
+  const gridElem = document.querySelector<HTMLDivElement>('#grid')!;
+  const gridOptions: agGrid.GridOptions = {
     defaultColDef: {
       sortable: true,
+      suppressMovable: true,
     },
     columnDefs: columns,
     rowData: rows,
+    enableCellTextSelection: true,
+    suppressCellFocus: true,
+    cacheQuickFilter: true,
+  };
+
+  new agGrid.Grid(gridElem, gridOptions);
+
+  const searchElem = document.querySelector<HTMLInputElement>('#search')!;
+  searchElem.addEventListener('input', () => {
+    gridOptions.api?.setQuickFilter(searchElem.value);
+  });
+
+  window.addEventListener('keydown', e => {
+    if (e.key === 'f' && e.ctrlKey) {
+      searchElem.focus();
+      e.preventDefault();
+    }
   });
 });
