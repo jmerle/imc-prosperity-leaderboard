@@ -1,0 +1,14 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#grid {
+  width: 100vw;
+  height: 100vh;
+}
+
+.header-with-tooltip .ag-header-cell-text {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
