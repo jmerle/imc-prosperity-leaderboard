@@ -185,6 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('keydown', e => {
     if (e.key === 'f' && e.ctrlKey) {
       searchElem.focus();
+      searchElem.select();
       e.preventDefault();
     }
   });
