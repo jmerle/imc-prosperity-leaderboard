@@ -47,15 +47,7 @@ function createDeltaFormatter(decimals: number): agGrid.ValueFormatterFunc {
       return numberFormatter(params);
     }
 
-    let prefix: string;
-    if (params.value === 0) {
-      prefix = '';
-    } else if (params.value < 0) {
-      prefix = '-';
-    } else {
-      prefix = '+';
-    }
-
+    const prefix = params.value > 0 ? '+' : '';
     return prefix + numberFormatter(params);
   };
 }
@@ -64,9 +56,6 @@ const columns: agGrid.GridOptions['columnDefs'] = [];
 
 const minRound = Math.min(...Object.values(teamData).map(team => Math.min(...Object.keys(team.results).map(Number))));
 const maxRound = Math.max(...Object.values(teamData).map(team => Math.max(...Object.keys(team.results).map(Number))));
-
-const officialJointInfo =
-  'Ranks are shown in official and joint format. The official rank does not have joint places for teams with equal profits, the joint rank does.';
 
 const numberComparator: agGrid.ColDef['comparator'] = (valueA, valueB) => {
   if (valueA === valueB) {
@@ -85,34 +74,16 @@ for (let i = maxRound; i >= minRound; i--) {
     headerName: `After Round ${i}`,
     children: [
       {
-        field: `round-${i}-official-rank`,
-        headerName: 'Official Rank',
-        headerTooltip: officialJointInfo,
-        headerClass: 'header-with-tooltip',
+        field: `round-${i}-rank`,
+        headerName: 'Rank',
         valueFormatter: createNumberFormatter(0),
         comparator: numberComparator,
         sort: i === maxRound ? 'asc' : undefined,
         filter: 'agNumberColumnFilter',
       },
       {
-        field: `round-${i}-official-rank-delta`,
-        headerName: 'Official Rank Δ',
-        valueFormatter: createDeltaFormatter(0),
-        comparator: numberComparator,
-        filter: 'agNumberColumnFilter',
-      },
-      {
-        field: `round-${i}-joint-rank`,
-        headerName: 'Joint Rank',
-        headerTooltip: officialJointInfo,
-        headerClass: 'header-with-tooltip',
-        valueFormatter: createNumberFormatter(0),
-        comparator: numberComparator,
-        filter: 'agNumberColumnFilter',
-      },
-      {
-        field: `round-${i}-joint-rank-delta`,
-        headerName: 'Joint Rank Δ',
+        field: `round-${i}-rank-delta`,
+        headerName: 'Rank Δ',
         valueFormatter: createDeltaFormatter(0),
         comparator: numberComparator,
         filter: 'agNumberColumnFilter',
@@ -149,10 +120,8 @@ for (const team of Object.values(teamData)) {
     const result = team.results[i];
     const previousResult = team.results[i - 1];
 
-    row[`round-${i}-official-rank`] = result ? result.officialRank : null;
-    row[`round-${i}-official-rank-delta`] = deltaValue(result?.officialRank, previousResult?.officialRank);
-    row[`round-${i}-joint-rank`] = result ? result.jointRank : null;
-    row[`round-${i}-joint-rank-delta`] = deltaValue(result?.jointRank, previousResult?.jointRank);
+    row[`round-${i}-rank`] = result ? result.rank : null;
+    row[`round-${i}-rank-delta`] = deltaValue(previousResult?.rank, result?.rank);
     row[`round-${i}-team`] = team.team;
     row[`round-${i}-profit`] = result ? result.profit : null;
     row[`round-${i}-profit-delta`] = deltaValue(result?.profit, previousResult?.profit);

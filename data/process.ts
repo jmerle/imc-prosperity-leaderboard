@@ -46,21 +46,9 @@ fs.readdirSync(rawDirectory)
       return b.profit - a.profit;
     });
 
-    let jointRank = 0;
-    let jointProfit: number | null = null;
-    let nextJointRank = 1;
-
     for (const row of data) {
-      if (row.profit !== jointProfit) {
-        jointRank = nextJointRank;
-        jointProfit = row.profit;
-      }
-
-      nextJointRank += 1;
-
       const roundResult: Result = {
-        officialRank: row.currentPlace,
-        jointRank,
+        rank: row.currentPlace,
         profit: row.profit,
       };
 

@@ -24,8 +24,3 @@ body {
 #grid {
   flex: 1;
 }
-
-.header-with-tooltip .ag-header-cell-text {
-  text-decoration: underline;
-  text-decoration-style: dotted;
-}

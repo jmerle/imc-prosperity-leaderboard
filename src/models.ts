@@ -1,6 +1,5 @@
 export interface Result {
-  officialRank: number | null;
-  jointRank: number;
+  rank: number | null;
   profit: number;
 }
 
