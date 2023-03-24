@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "process": "ts-node-esm data/process.ts",
     "lint": "yarn lint:eslint && yarn lint:prettier",
-    "lint:eslint": "eslint --format codeframe 'src/**/*.ts' 'data/**/*.ts'",
+    "lint:eslint": "eslint --format codeframe 'src/**/*.ts' 'data/**/*.ts' vite.config.ts",
     "lint:prettier": "prettier --check --ignore-path .gitignore '**/*.{ts,html,css,yml}'",
     "fix": "yarn fix:eslint && yarn fix:prettier",
     "fix:eslint": "yarn lint:eslint --fix",
