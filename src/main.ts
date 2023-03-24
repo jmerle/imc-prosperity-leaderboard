@@ -70,8 +70,13 @@ const numberComparator: agGrid.ColDef['comparator'] = (valueA, valueB) => {
 };
 
 for (let i = maxRound; i >= minRound; i--) {
+  const totalTeams = Object.values(teamData).filter(team => team.results[i]).length;
+  const rankedTeams = Object.values(teamData).filter(team => team.results[i]?.rank).length;
+
   columns.push({
-    headerName: `After Round ${i}`,
+    headerName: `After Round ${i} • ${formatNumber(totalTeams)} unique teams • ${formatNumber(
+      rankedTeams,
+    )} ranked teams`,
     children: [
       {
         field: `round-${i}-rank`,
