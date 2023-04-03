@@ -57,15 +57,17 @@ const columns: agGrid.GridOptions['columnDefs'] = [];
 const minRound = Math.min(...Object.values(teamData).map(team => Math.min(...Object.keys(team.results).map(Number))));
 const maxRound = Math.max(...Object.values(teamData).map(team => Math.max(...Object.keys(team.results).map(Number))));
 
-const numberComparator: agGrid.ColDef['comparator'] = (valueA, valueB) => {
+const numberComparator: agGrid.ColDef['comparator'] = (valueA, valueB, nodeA, nodeB, isDescending) => {
   if (valueA === valueB) {
     return 0;
-  } else if (valueA === null) {
-    return 1;
-  } else if (valueB === null) {
-    return -1;
-  } else {
+  } else if (valueA !== null && valueB !== null) {
     return valueA - valueB;
+  }
+
+  if (isDescending) {
+    return valueA === null ? -1 : 1;
+  } else {
+    return valueA === null ? 1 : -1;
   }
 };
 
